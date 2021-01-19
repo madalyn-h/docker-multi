@@ -1,14 +1,15 @@
 sudo: required
 language: generic
+#add dependencies
 services:
  - docker
-
+##build test version of React project
 before_install:
   - docker build -t madalynharger/react-test -f ./client/Dockerfile.dev ./client
-
+#Run tests
 script:
   - docker run -e CI=true madalynharger/react-test npm test
-
+#Build prod versions of all projects
 after_success:
   - docker build -t madalynharger/multi-client ./client
   - docker build -t madalynharger/multi-nginx ./nginx
@@ -21,3 +22,5 @@ after_success:
   - docker push madalynharger/multi-nginx
   - docker push madalynharger/multi-server
   - docker push madalynharger/multi-worker
+
+  #have elastic beanstalk deploy them
